@@ -32,7 +32,7 @@ function App() {
   const fetchMovieDetails = (id) => {
     setIsLoading(true);
     fetch(
-      `http://www.omdbapi.com/?i=${id}&apikey=${process.env.REACT_APP_OMDB_API_KEY}`
+      `https://www.omdbapi.com/?i=${id}&apikey=${process.env.REACT_APP_OMDB_API_KEY}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -45,7 +45,7 @@ function App() {
     if (searchQuery || searchYear || searchType) {
       const fetchPage = async (page) => {
         const response = await fetch(
-          `http://www.omdbapi.com/?s=${searchQuery}${
+          `https://www.omdbapi.com/?s=${searchQuery}${
             searchYear ? `&y=${searchYear}` : ""
           }${searchType ? `&type=${searchType}` : ""}&page=${page}&apikey=${
             process.env.REACT_APP_OMDB_API_KEY

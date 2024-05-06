@@ -73,10 +73,12 @@ const FilterBox = () => {
 
   const setSearchYear = useStore((state) => state.setSearchYear);
   const setSearchType = useStore((state) => state.setSearchType);
+  const setCurrentPage = useStore((state) => state.setCurrentPage);
 
   const handleSearch = () => {
     setSearchYear(year);
     setSearchType(type);
+    setCurrentPage(1);
   };
 
   return (

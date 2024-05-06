@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import PaginationButtons from "./PaginationButtons";
-import  useStore  from "../../store";
+import Loader from "../addons/Loader";
+import useStore from "../../store";
 
 const MovieContainer = styled.div`
   display: ${(props) => (props.isGrid ? "grid" : "flex")};
@@ -52,12 +53,12 @@ const MovieImage = styled.img`
 `;
 
 const MovieList = () => {
-
   const movies = useStore((state) => state.movies.data);
-  const [currentPage, setCurrentPage] = useState(() => {
-    const savedPage = localStorage.getItem("currentPage");
-    return savedPage ? Number(savedPage) : 1;
-  });
+
+  // const [currentPage, setCurrentPage] = useState(1);
+  const isLoading = useStore((state) => state.isLoading);
+  const currentPage = useStore((state) => state.currentPage);
+  const setCurrentPage = useStore((state) => state.setCurrentPage);
   const moviesPerPage = 8;
   const numberOfPages = Math.ceil(movies.length / moviesPerPage);
   const moviesToShow = movies.slice(
@@ -66,24 +67,16 @@ const MovieList = () => {
   );
 
   const searchQuery = useStore((state) => state.searchQuery);
-  
   const setSelectedMovie = useStore((state) => state.setSelectedMovie);
   const setIsModalOpen = useStore((state) => state.setIsModalOpen);
-
+  const [prevSearchQuery, setPrevSearchQuery] = useState(searchQuery);
+ 
   useEffect(() => {
+    if (searchQuery !== prevSearchQuery) {
     setCurrentPage(1);
-  }, [searchQuery]);
-
-  useEffect(() => {
-    localStorage.setItem("currentPage", currentPage);
-  }, [currentPage]);
-
-  useEffect(() => {
-    const savedPage = localStorage.getItem("currentPage");
-    if (savedPage) {
-      setCurrentPage(Number(savedPage));
-    }
-  }, []);
+    setPrevSearchQuery(searchQuery);
+  }
+}, [searchQuery, prevSearchQuery, setCurrentPage]);
 
   return (
     <>
@@ -94,14 +87,25 @@ const MovieList = () => {
         disabled={moviesToShow.length === 0}
       />
       <MovieContainer isGrid={moviesToShow.length > 0}>
-        {moviesToShow.length === 0 ? (
+        {isLoading ? (
+          <Loader centered color="white" />
+        ) : moviesToShow.length === 0 ? (
           <NoResultsMessage>
             Sorry, no results found. Please try another search.
           </NoResultsMessage>
         ) : (
           moviesToShow.map((movie) => (
             <MovieImage
-              src={movie.Poster}
+              src={
+                movie.Poster !== "N/A"
+                  ? movie.Poster
+                  : process.env.PUBLIC_URL + "/No-Image-Placeholder.png"
+              }
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src =
+                  process.env.PUBLIC_URL + "/No-Image-Placeholder.png";
+              }}
               key={movie.imdbID}
               onClick={() => {
                 setSelectedMovie(movie);
@@ -111,6 +115,7 @@ const MovieList = () => {
           ))
         )}
       </MovieContainer>
+
       <PaginationButtons
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}

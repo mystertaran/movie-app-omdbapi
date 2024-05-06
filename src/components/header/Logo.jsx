@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import useStore from '../../store';
 
 const LogoContainer = styled(Link)`
     width: 200px;
@@ -13,8 +14,15 @@ const LogoContainer = styled(Link)`
 
 
 const Logo = () => {
+  const setCurrentPage = useStore(state => state.setCurrentPage);
+
+  const handleClick = () => {
+    setCurrentPage(1);
+  }
+
+
   return (
-    <LogoContainer to="/" />
+    <LogoContainer to="/" onClick={handleClick}/>
   )
 }
 

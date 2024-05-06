@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import  useStore  from '../../store';
 
 const FilterBoxContainer = styled.div`
   display: flex;
@@ -66,13 +67,18 @@ gap: 10px;
 };
 `;
 
-const FilterBox = ({ setSearchYear, setSearchType }) => {
+const FilterBox = () => {
   const [year, setYear] = useState('');
   const [type, setType] = useState('');
+
+  const setSearchYear = useStore((state) => state.setSearchYear);
+  const setSearchType = useStore((state) => state.setSearchType);
+  const setCurrentPage = useStore((state) => state.setCurrentPage);
 
   const handleSearch = () => {
     setSearchYear(year);
     setSearchType(type);
+    setCurrentPage(1);
   };
 
   return (

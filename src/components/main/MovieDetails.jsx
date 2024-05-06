@@ -82,7 +82,16 @@ const MovieDetails = ({ movie, onBack }) => {
     (
       <MovieDetailsContainer>
         <ImageColumn>
-          <MovieImage src={movie.Poster} alt={movie.Title} />
+          <MovieImage src={
+                movie.Poster !== "N/A"
+                  ? movie.Poster
+                  : process.env.PUBLIC_URL + "/No-Image-Placeholder.png"
+              }
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src =
+                  process.env.PUBLIC_URL + "/No-Image-Placeholder.png";
+              }} alt={movie.Title} />
         </ImageColumn>
         <ContentColumn>
           <MovieTitle>{movie.Title}</MovieTitle>

@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
 import { FiSearch } from 'react-icons/fi';
+import  useStore  from '../../store';
 
 const SearchBoxContainer = styled.div`
     position: relative;
@@ -30,9 +31,11 @@ const SearchForm = styled.form`
 
 
 
-const SearchBox = ({ setSearchQuery }) => {
+const SearchBox = () => {
     const [inputValue, setInputValue] = useState('');
     const [isFocused, setIsFocused] = useState(false);
+
+    const setSearchQuery = useStore(state => state.setSearchQuery);
 
     const handleInput = (event) => {
         console.log('Input value:', event.target.value);

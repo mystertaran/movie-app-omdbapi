@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import NavBar from "./components/header/NavBar";
 import MovieList from "./components/main/MovieList";
 import Modal from "./components/main/Modal";
@@ -6,78 +6,51 @@ import Loader from "./components/addons/Loader";
 import MovieDetails from "./components/main/MovieDetails";
 import FilterBox from "./components/header/FilterBox";
 import GlobalStyle from "./styles/GlobalStyles";
-
-const keywords = [
-  "star wars",
-  "inception",
-  "avengers",
-  "matrix",
-  "batman",
-  "superman",
-];
+import useStore from "./store";
+import { fetchMovieDetails, fetchAllPages } from "./utils/api";
 
 function App() {
-  const [searchQuery, setSearchQuery] = useState(
-    keywords[Math.floor(Math.random() * keywords.length)]
-  );
-  const [searchYear, setSearchYear] = useState("");
-  const [searchType, setSearchType] = useState("");
-  const [movies, setMovies] = useState({ data: [], query: "" });
-  const [selectedMovie, setSelectedMovie] = useState(null);
-  const [movieDetails, setMovieDetails] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-
-  const fetchMovieDetails = (id) => {
-    setIsLoading(true);
-    fetch(
-      `https://www.omdbapi.com/?i=${id}&apikey=${process.env.REACT_APP_OMDB_API_KEY}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setMovieDetails(data);
-        setIsLoading(false);
-      });
-  };
+  const {
+    searchQuery,
+    setSearchQuery,
+    searchYear,
+    setSearchYear,
+    searchType,
+    setSearchType,
+    movies,
+    setMovies,
+    selectedMovie,
+    setSelectedMovie,
+    movieDetails,
+    setMovieDetails,
+    isModalOpen,
+    setIsModalOpen,
+    isLoading,
+    setIsLoading,
+  } = useStore();
 
   useEffect(() => {
     if (searchQuery || searchYear || searchType) {
-      const fetchPage = async (page) => {
-        const response = await fetch(
-          `https://www.omdbapi.com/?s=${searchQuery}${
-            searchYear ? `&y=${searchYear}` : ""
-          }${searchType ? `&type=${searchType}` : ""}&page=${page}&apikey=${
-            process.env.REACT_APP_OMDB_API_KEY
-          }`
-        );
-        const data = await response.json();
-        return data.Search;
-      };
-
-      const fetchAllPages = async () => {
-        let allMovies = [];
-        for (let page = 1; page <= 3; page++) {
-          const movies = await fetchPage(page);
-          if (movies) {
-            allMovies = [...allMovies, ...movies];
-          }
-        }
+      setIsLoading(true);
+      fetchAllPages(searchQuery, searchYear, searchType).then((allMovies) => {
         setMovies({ data: allMovies, query: searchQuery });
         setIsLoading(false);
-      };
-
-      fetchAllPages();
+      });
     } else {
       setMovies({ data: [], query: searchQuery });
     }
-  }, [searchQuery, searchYear, searchType]);
+  }, [searchQuery, searchYear, searchType, setMovies, setIsLoading]);
 
   useEffect(() => {
     if (selectedMovie) {
-      fetchMovieDetails(selectedMovie.imdbID);
+      setIsLoading(true);
+      fetchMovieDetails(selectedMovie.imdbID).then((data) => {
+        setMovieDetails(data);
+        setIsLoading(false);
+      });
     }
-  }, [selectedMovie]);
+  }, [selectedMovie, setMovieDetails, setIsLoading]);
+
 
   return (
     <>
@@ -88,7 +61,6 @@ function App() {
         <Modal
           onClick={() => {
             setIsModalOpen(false);
-            setSearchQuery(movies.query);
           }}
         >
           {isLoading ? (

@@ -9,7 +9,6 @@ import GlobalStyle from "./styles/GlobalStyles";
 import useStore from "./store";
 import { fetchMovieDetails, fetchAllPages } from "./utils/api";
 
-
 function App() {
   const {
     searchQuery,
@@ -30,11 +29,10 @@ function App() {
     setIsLoading,
   } = useStore();
 
-
   useEffect(() => {
     if (searchQuery || searchYear || searchType) {
       setIsLoading(true);
-      fetchAllPages(searchQuery, searchYear, searchType).then(allMovies => {
+      fetchAllPages(searchQuery, searchYear, searchType).then((allMovies) => {
         setMovies({ data: allMovies, query: searchQuery });
         setIsLoading(false);
       });
@@ -42,16 +40,17 @@ function App() {
       setMovies({ data: [], query: searchQuery });
     }
   }, [searchQuery, searchYear, searchType, setMovies, setIsLoading]);
-  
+
   useEffect(() => {
     if (selectedMovie) {
       setIsLoading(true);
-      fetchMovieDetails(selectedMovie.imdbID).then(data => {
+      fetchMovieDetails(selectedMovie.imdbID).then((data) => {
         setMovieDetails(data);
         setIsLoading(false);
       });
     }
   }, [selectedMovie, setMovieDetails, setIsLoading]);
+
 
   return (
     <>
@@ -62,7 +61,6 @@ function App() {
         <Modal
           onClick={() => {
             setIsModalOpen(false);
-            // setSearchQuery(movies.query);
           }}
         >
           {isLoading ? (

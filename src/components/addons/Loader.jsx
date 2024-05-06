@@ -9,6 +9,8 @@ const LoaderContainer = styled.div`
   display: inline-block;
   width: 80px;
   height: 80px;
+  margin: 50px auto;
+  position: relative;
   &:after {
     content: " ";
     display: block;
@@ -23,7 +25,7 @@ const LoaderContainer = styled.div`
   ${(props) =>
     props.centered &&
     css`
-      position: fixed;
+      position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);

@@ -19,6 +19,7 @@ const useStore = create((set) => ({
   isModalOpen: false,
   isLoading: false,
   currentPage: 1,
+  hasImageError: false,
   setCurrentPage: (page) => set({ currentPage: page }),
   setSearchQuery: (query) => set({ searchQuery: query }),
   setSearchYear: (year) => set({ searchYear: year }),
@@ -28,6 +29,7 @@ const useStore = create((set) => ({
   setMovieDetails: (details) => set({ movieDetails: details }),
   setIsModalOpen: (isOpen) => set({ isModalOpen: isOpen }),
   setIsLoading: (isLoading) => set({ isLoading }),
+  setHasImageError: (hasError) => set({ hasImageError: hasError }),
 }));
 
 export default useStore;

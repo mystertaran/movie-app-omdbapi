@@ -1,23 +1,26 @@
-// W MovieList.jsx
 import React, { useEffect, useState } from "react";
-import styled, {css} from "styled-components";
+import styled, { css } from "styled-components";
 import PaginationButtons from "./PaginationButtons";
+import  useStore  from "../../store";
 
 const MovieContainer = styled.div`
-  display: ${props => props.isGrid ? 'grid' : 'flex'};
-  ${props => props.isGrid ? css`
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: 0px;
-  padding: 0px;
+  display: ${(props) => (props.isGrid ? "grid" : "flex")};
+  ${(props) =>
+    props.isGrid
+      ? css`
+          grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+          gap: 0px;
+          padding: 0px;
 
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
-  }
-` : css`
-justify-content: center;
-align-items: center;
-height: 140px;
-`}
+          @media (max-width: 768px) {
+            grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+          }
+        `
+      : css`
+          justify-content: center;
+          align-items: center;
+          height: 140px;
+        `}
 `;
 
 const NoResultsMessage = styled.div`
@@ -48,14 +51,9 @@ const MovieImage = styled.img`
   }
 `;
 
+const MovieList = () => {
 
-
-const MovieList = ({
-  searchQuery,
-  movies,
-  setSelectedMovie,
-  setIsModalOpen,
-}) => {
+  const movies = useStore((state) => state.movies.data);
   const [currentPage, setCurrentPage] = useState(() => {
     const savedPage = localStorage.getItem("currentPage");
     return savedPage ? Number(savedPage) : 1;
@@ -67,9 +65,11 @@ const MovieList = ({
     currentPage * moviesPerPage
   );
 
-
-
+  const searchQuery = useStore((state) => state.searchQuery);
   
+  const setSelectedMovie = useStore((state) => state.setSelectedMovie);
+  const setIsModalOpen = useStore((state) => state.setIsModalOpen);
+
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery]);

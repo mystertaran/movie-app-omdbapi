@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import NavBar from "./components/header/NavBar";
 import MovieList from "./components/main/MovieList";
 import Modal from "./components/main/Modal";
@@ -6,30 +6,31 @@ import Loader from "./components/addons/Loader";
 import MovieDetails from "./components/main/MovieDetails";
 import FilterBox from "./components/header/FilterBox";
 import GlobalStyle from "./styles/GlobalStyles";
+import useStore from "./store";
 
-const keywords = [
-  "star wars",
-  "inception",
-  "avengers",
-  "matrix",
-  "batman",
-  "superman",
-];
 
 function App() {
-  const [searchQuery, setSearchQuery] = useState(
-    keywords[Math.floor(Math.random() * keywords.length)]
-  );
-  const [searchYear, setSearchYear] = useState("");
-  const [searchType, setSearchType] = useState("");
-  const [movies, setMovies] = useState({ data: [], query: "" });
-  const [selectedMovie, setSelectedMovie] = useState(null);
-  const [movieDetails, setMovieDetails] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const {
+    searchQuery,
+    setSearchQuery,
+    searchYear,
+    setSearchYear,
+    searchType,
+    setSearchType,
+    movies,
+    setMovies,
+    selectedMovie,
+    setSelectedMovie,
+    movieDetails,
+    setMovieDetails,
+    isModalOpen,
+    setIsModalOpen,
+    isLoading,
+    setIsLoading,
+  } = useStore();
 
 
-  const fetchMovieDetails = (id) => {
+  const fetchMovieDetails = useCallback((id) => {
     setIsLoading(true);
     fetch(
       `https://www.omdbapi.com/?i=${id}&apikey=${process.env.REACT_APP_OMDB_API_KEY}`
@@ -39,7 +40,7 @@ function App() {
         setMovieDetails(data);
         setIsLoading(false);
       });
-  };
+  }, [setIsLoading, setMovieDetails]);
 
   useEffect(() => {
     if (searchQuery || searchYear || searchType) {
@@ -71,13 +72,13 @@ function App() {
     } else {
       setMovies({ data: [], query: searchQuery });
     }
-  }, [searchQuery, searchYear, searchType]);
+  }, [searchQuery, searchYear, searchType, setMovies, setIsLoading]);
 
   useEffect(() => {
     if (selectedMovie) {
       fetchMovieDetails(selectedMovie.imdbID);
     }
-  }, [selectedMovie]);
+  }, [selectedMovie, fetchMovieDetails]);
 
   return (
     <>

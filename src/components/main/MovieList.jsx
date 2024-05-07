@@ -76,6 +76,34 @@ const MovieTitle = styled.h2`
   width: 300px;
 `;
 
+const Movie = ({ movie, setSelectedMovie, setIsModalOpen }) => {
+  const [hasImageError, setHasImageError] = useState(false);
+
+  return (
+    <MovieImageContainer poster={movie.Poster}>
+      <MovieImage
+        src={
+          movie.Poster !== "N/A"
+            ? movie.Poster
+            : process.env.PUBLIC_URL + "/No-Image-Placeholder.png"
+        }
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = process.env.PUBLIC_URL + "/No-Image-Placeholder.png";
+          setHasImageError(true);
+        }}
+        onClick={() => {
+          setSelectedMovie(movie);
+          setIsModalOpen(true);
+        }}
+      />
+      {(movie.Poster === "N/A" || hasImageError) && (
+        <MovieTitle>{movie.Title}</MovieTitle>
+      )}
+    </MovieImageContainer>
+  );
+};
+
 const MovieList = () => {
   const movies = useStore((state) => state.movies.data);
   const hasImageError = useStore((state) => state.hasImageError);
@@ -121,26 +149,12 @@ const MovieList = () => {
           </NoResultsMessage>
         ) : (
           moviesToShow.map((movie) => (
-            <MovieImageContainer key={movie.imdbID} poster={movie.Poster}>
-              <MovieImage
-                src={
-                  movie.Poster !== "N/A"
-                    ? movie.Poster
-                    : process.env.PUBLIC_URL + "/No-Image-Placeholder.png"
-                }
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src =
-                  process.env.PUBLIC_URL + "/No-Image-Placeholder.png"
-                  setHasImageError(true);
-                }}
-                onClick={() => {
-                  setSelectedMovie(movie);
-                  setIsModalOpen(true);
-                }}
-              />
-              {(movie.Poster === "N/A" || hasImageError) && <MovieTitle>{movie.Title}</MovieTitle>}
-            </MovieImageContainer>
+            <Movie
+              key={movie.imdbID}
+              movie={movie}
+              setSelectedMovie={setSelectedMovie}
+              setIsModalOpen={setIsModalOpen}
+            />
           ))
         )}
       </MovieContainer>

@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Logo from "./Logo";
 import AppName from "./AppName";
-import SearchBox from "./SearchBox";
+import SearchBox from "./SearchBox.tsx";
 
 const NavBarContainer = styled.div`
   display: flex;

@@ -9,7 +9,39 @@ const keywords = [
   "superman",
 ];
 
-const useStore = create((set) => ({
+
+interface Movie {
+  Title: string;
+  Year: string;
+  imdbID: string;
+  Type: string;
+  Poster: string;
+}
+
+interface State {
+  searchQuery: string;
+  searchYear: string;
+  searchType: string;
+  movies: { data: Movie[]; query: string };
+  selectedMovie: Movie | null;
+  movieDetails: Movie | null;
+  isModalOpen: boolean;
+  isLoading: boolean;
+  currentPage: number;
+  hasImageError: boolean;
+  setCurrentPage: (page: number) => void;
+  setSearchQuery: (query: string) => void;
+  setSearchYear: (year: string) => void;
+  setSearchType: (type: string) => void;
+  setMovies: (movies: { data: Movie[]; query: string }) => void;
+  setSelectedMovie: (movie: Movie) => void;
+  setMovieDetails: (details: Movie) => void;
+  setIsModalOpen: (isOpen: boolean) => void;
+  setIsLoading: (isLoading: boolean) => void;
+  setHasImageError: (hasError: boolean) => void;
+}
+
+const useStore = create<State>((set) => ({
   searchQuery: keywords[Math.floor(Math.random() * keywords.length)],
   searchYear: "",
   searchType: "",

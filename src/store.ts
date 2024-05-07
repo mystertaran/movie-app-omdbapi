@@ -11,11 +11,14 @@ const keywords = [
 
 
 interface Movie {
-  Title: string;
-  Year: string;
-  imdbID: string;
-  Type: string;
   Poster: string;
+  Title: string;
+  imdbID: string;
+  Year: string;
+  Director?: string;
+  Language?: string;
+  Genre?: string;
+  Plot?: string;
 }
 
 interface State {

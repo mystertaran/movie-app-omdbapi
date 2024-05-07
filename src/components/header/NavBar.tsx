@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Logo from "./Logo";
 import AppName from "./AppName";
-import SearchBox from "./SearchBox.tsx";
+import SearchBox from "./SearchBox";
 
 const NavBarContainer = styled.div`
   display: flex;
@@ -16,7 +16,11 @@ const NavBarContainer = styled.div`
   }
 `;
 
-const NavBar = ({setSearchQuery}) => {
+interface NavBarProps {
+  setSearchQuery: (query: string) => void;
+}
+
+const NavBar: React.FC<NavBarProps> = ({setSearchQuery}) => {
   return (
     <NavBarContainer>
       <Logo />

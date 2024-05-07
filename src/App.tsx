@@ -9,7 +9,7 @@ import GlobalStyle from "./styles/GlobalStyles";
 import useStore from "./store";
 import { fetchMovieDetails, fetchAllPages } from "./utils/api";
 
-function App() {
+const App: React.FC = () => {
   const {
     searchQuery,
     setSearchQuery,
@@ -76,10 +76,10 @@ function App() {
         </Modal>
       ) : (
         <MovieList
-          searchQuery={searchQuery}
-          movies={movies.data}
-          setSelectedMovie={setSelectedMovie}
-          setIsModalOpen={setIsModalOpen}
+          searchQueryProp={searchQuery}
+          moviesProp={movies.data}
+          setSelectedMovieProp={setSelectedMovie}
+          setIsModalOpenProp={setIsModalOpen}
         />
       )}
     </>

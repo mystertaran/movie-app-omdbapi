@@ -1,8 +1,17 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
-export const fetchMovieDetails = async (id) => {
+interface Movie {
+  Title: string;
+  Year: string;
+  imdbID: string;
+  Type: string;
+  Poster: string;
+  Director: string;
+}
+
+export const fetchMovieDetails = async (id: string): Promise<Movie> => {
   try {
-    const response = await axios.get(
+    const response: AxiosResponse<Movie> = await axios.get(
       `https://www.omdbapi.com/?i=${id}&apikey=${process.env.REACT_APP_OMDB_API_KEY}`
     );
     return response.data;
@@ -13,30 +22,34 @@ export const fetchMovieDetails = async (id) => {
 };
 
 export const fetchNumberOfPages = async (
-  searchQuery,
-  searchYear,
-  searchType
-) => {
-  const response = await axios.get(
+  searchQuery: string,
+  searchYear?: string,
+  searchType?: string
+): Promise<number> => {
+  const response: AxiosResponse<{ totalResults: string }> = await axios.get(
     `https://www.omdbapi.com/?s=${searchQuery}${
       searchYear ? `&y=${searchYear}` : ""
     }${searchType ? `&type=${searchType}` : ""}&apikey=${
       process.env.REACT_APP_OMDB_API_KEY
     }`
   );
-  return Math.ceil(response.data.totalResults / 8);
+  return Math.ceil(parseInt(response.data.totalResults) / 8);
 };
 
-export const fetchAllPages = async (searchQuery, searchYear, searchType) => {
+export const fetchAllPages = async (
+  searchQuery: string,
+  searchYear?: string,
+  searchType?: string
+): Promise<Movie[]> => {
   const numberOfPages = await fetchNumberOfPages(
     searchQuery,
     searchYear,
     searchType
   );
-  let allMovies = [];
+  let allMovies: Movie[] = [];
   try {
     for (let page = 1; page <= numberOfPages; page++) {
-      const response = await axios.get(
+      const response: AxiosResponse<{ Search: Movie[]}> = await axios.get(
         `https://www.omdbapi.com/?s=${searchQuery}${
           searchYear ? `&y=${searchYear}` : ""
         }${searchType ? `&type=${searchType}` : ""}&page=${page}&apikey=${

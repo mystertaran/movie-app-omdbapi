@@ -12,7 +12,7 @@ const AppNameContainer = styled(Link)`
 
 
 
-const AppName = () => {
+const AppName: React.FC = () => {
   const setCurrentPage = useStore(state => state.setCurrentPage);
 
   const handleClick = () => {

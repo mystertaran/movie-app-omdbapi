@@ -67,7 +67,12 @@ gap: 10px;
 };
 `;
 
-const FilterBox = () => {
+interface FilterBoxProps {
+  setSearchYear: (year: string) => void;
+  setSearchType: (type: string) => void;
+}
+
+const FilterBox: React.FC<FilterBoxProps> = () => {
   const [year, setYear] = useState('');
   const [type, setType] = useState('');
 

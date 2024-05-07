@@ -95,8 +95,7 @@ const Movie: React.FC<MovieProps> = ({
   setSelectedMovie,
   setIsModalOpen,
 }) => {
-  const hasImageError = useStore((state) => state.hasImageError);
-  const setHasImageError = useStore((state) => state.setHasImageError);
+  const [hasImageError, setHasImageError] = useState(false);
 
   return (
     <MovieImageContainer poster={movie.Poster}>

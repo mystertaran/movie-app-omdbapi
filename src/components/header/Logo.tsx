@@ -13,7 +13,8 @@ const LogoContainer = styled(Link)`
 `
 
 
-const Logo = () => {
+
+const Logo: React.FC = () => {
   const setCurrentPage = useStore(state => state.setCurrentPage);
 
   const handleClick = () => {

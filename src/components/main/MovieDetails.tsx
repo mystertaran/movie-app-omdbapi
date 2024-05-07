@@ -25,7 +25,6 @@ const ContentColumn = styled.div`
   @media (max-width: 768px) {
     p {
       font-size: 12px;
-    
     }
   }
 `;
@@ -76,22 +75,38 @@ const MovieDetailsButton = styled.a`
   }
 `;
 
-const MovieDetails = ({ movie, onBack }) => {
+interface MovieDetailsProps {
+  movie: {
+    Poster: string;
+    Title: string;
+    imdbID: string;
+    Year: string;
+    Director?: string;
+    Language?: string;
+    Genre?: string;
+    Plot?: string;
+  };
+  onBack: () => void;
+}
+
+const MovieDetails: React.FC<MovieDetailsProps> = ({ movie, onBack }) => {
   return (
-    console.log(movie),
     (
       <MovieDetailsContainer>
         <ImageColumn>
-          <MovieImage src={
-                movie.Poster !== "N/A"
-                  ? movie.Poster
-                  : process.env.PUBLIC_URL + "/No-Image-Placeholder.png"
-              }
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src =
-                  process.env.PUBLIC_URL + "/No-Image-Placeholder.png";
-              }} alt={movie.Title} />
+          <MovieImage
+            src={
+              movie.Poster !== "N/A"
+                ? movie.Poster
+                : process.env.PUBLIC_URL + "/No-Image-Placeholder.png"
+            }
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.onerror = null;
+              target.src = process.env.PUBLIC_URL + "/No-Image-Placeholder.png";
+            }}
+            alt={movie.Title}
+          />
         </ImageColumn>
         <ContentColumn>
           <MovieTitle>{movie.Title}</MovieTitle>

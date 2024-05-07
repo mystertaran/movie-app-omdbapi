@@ -4,7 +4,15 @@ import PaginationButtons from "./PaginationButtons";
 import Loader from "../addons/Loader";
 import useStore from "../../store";
 
-const MovieContainer = styled.div`
+interface MovieContainerProps {
+  isGrid: boolean;
+}
+
+interface MovieImageContainerProps {
+  poster: string;
+}
+
+const MovieContainer = styled.div<MovieContainerProps>`
   display: ${(props) => (props.isGrid ? "grid" : "flex")};
   ${(props) =>
     props.isGrid
@@ -55,7 +63,7 @@ const MovieImage = styled.img`
   }
 `;
 
-const MovieImageContainer = styled.div`
+const MovieImageContainer = styled.div<MovieImageContainerProps>`
   width: 100%;
   min-height: 200px;
   max-height: 486px;
@@ -76,8 +84,19 @@ const MovieTitle = styled.h2`
   width: 300px;
 `;
 
-const Movie = ({ movie, setSelectedMovie, setIsModalOpen }) => {
-  const [hasImageError, setHasImageError] = useState(false);
+interface MovieProps {
+  movie: Movie;
+  setSelectedMovie: (movie: Movie) => void;
+  setIsModalOpen: (isOpen: boolean) => void;
+}
+
+const Movie: React.FC<MovieProps> = ({
+  movie,
+  setSelectedMovie,
+  setIsModalOpen,
+}) => {
+  const hasImageError = useStore((state) => state.hasImageError);
+  const setHasImageError = useStore((state) => state.setHasImageError);
 
   return (
     <MovieImageContainer poster={movie.Poster}>
@@ -88,8 +107,9 @@ const Movie = ({ movie, setSelectedMovie, setIsModalOpen }) => {
             : process.env.PUBLIC_URL + "/No-Image-Placeholder.png"
         }
         onError={(e) => {
-          e.target.onerror = null;
-          e.target.src = process.env.PUBLIC_URL + "/No-Image-Placeholder.png";
+          const target = e.target as HTMLImageElement;
+          target.onerror = null;
+          target.src = process.env.PUBLIC_URL + "/No-Image-Placeholder.png";
           setHasImageError(true);
         }}
         onClick={() => {
@@ -104,10 +124,31 @@ const Movie = ({ movie, setSelectedMovie, setIsModalOpen }) => {
   );
 };
 
-const MovieList = () => {
+interface Movie {
+  Poster: string;
+  Title: string;
+  imdbID: string;
+  Year: string;
+  Director?: string;
+  Language?: string;
+  Genre?: string;
+  Plot?: string;
+}
+
+interface MovieListProps {
+  searchQueryProp: string;
+  moviesProp: Movie[];
+  setSelectedMovieProp: (movie: Movie) => void;
+  setIsModalOpenProp: (isOpen: boolean) => void;
+}
+
+const MovieList: React.FC<MovieListProps> = ({
+  searchQueryProp,
+  moviesProp,
+  setSelectedMovieProp,
+  setIsModalOpenProp,
+}) => {
   const movies = useStore((state) => state.movies.data);
-  const hasImageError = useStore((state) => state.hasImageError);
-  const setHasImageError = useStore((state) => state.setHasImageError);
   const isLoading = useStore((state) => state.isLoading);
   const currentPage = useStore((state) => state.currentPage);
   const setCurrentPage = useStore((state) => state.setCurrentPage);

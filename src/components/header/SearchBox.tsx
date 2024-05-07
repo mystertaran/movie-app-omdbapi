@@ -14,6 +14,10 @@ interface SearchInputProps {
   placeholder: string;
 }
 
+interface SearchBoxProps {
+  setSearchQuery: (query: string) => void;
+}
+
 const SearchBoxContainer = styled.div`
   position: relative;
 `;
@@ -45,7 +49,7 @@ type HandleInput = (event: ChangeEvent<HTMLInputElement>) => void;
 type HandleSubmit = (event: FormEvent<HTMLFormElement>) => void;
 
 
-const SearchBox: React.FC = () => {
+const SearchBox: React.FC<SearchBoxProps> = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
 

@@ -96,6 +96,16 @@ const MovieTitle = styled.h2`
     max-height: 150px;
   }
 `;
+interface Movie {
+  Poster: string;
+  Title: string;
+  imdbID: string;
+  Year: string;
+  Director?: string;
+  Language?: string;
+  Genre?: string;
+  Plot?: string;
+}
 
 interface MovieProps {
   movie: Movie;
@@ -108,7 +118,8 @@ const Movie: React.FC<MovieProps> = ({
   setSelectedMovie,
   setIsModalOpen,
 }) => {
-  const [hasImageError, setHasImageError] = useState(false);
+  const hasImageError = useStore((state) => state.hasImageError);
+  const setHasImageError = useStore((state) => state.setHasImageError);
 
   return (
     <MovieImageContainer poster={movie.Poster}>
@@ -139,16 +150,7 @@ const Movie: React.FC<MovieProps> = ({
   );
 };
 
-interface Movie {
-  Poster: string;
-  Title: string;
-  imdbID: string;
-  Year: string;
-  Director?: string;
-  Language?: string;
-  Genre?: string;
-  Plot?: string;
-}
+
 
 interface MovieListProps {
   searchQueryProp: string;

@@ -40,6 +40,14 @@ const LoaderContainer = styled.div<LoaderContainerProps>`
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+
+      @media (max-width: 768px) {
+        top: initial;
+      }
+      
+      @media (min-width: 769px) {
+        top: 50%;
+      }
     `}
 `;
 

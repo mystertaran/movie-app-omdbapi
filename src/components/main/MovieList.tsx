@@ -73,15 +73,28 @@ const MovieImageContainer = styled.div<MovieImageContainerProps>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 `;
 
 const MovieTitle = styled.h2`
+  display: block;
+  cursor: pointer;
   position: absolute;
   color: black;
   text-align: center;
   padding: 10px;
   text-wrap: wrap;
   width: 300px;
+  max-height: 300px;
+  white-space: pre-line;
+  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+  transform: scaleY(1.6);
+
+  @media (max-width: 768px) {
+    width: 140px;
+    font-size: 18px;
+    max-height: 150px;
+  }
 `;
 
 interface MovieProps {
@@ -117,7 +130,10 @@ const Movie: React.FC<MovieProps> = ({
         }}
       />
       {(movie.Poster === "N/A" || hasImageError) && (
-        <MovieTitle>{movie.Title}</MovieTitle>
+        <MovieTitle onClick={() => {
+          setSelectedMovie(movie);
+          setIsModalOpen(true);
+        }}>{movie.Title}</MovieTitle>
       )}
     </MovieImageContainer>
   );

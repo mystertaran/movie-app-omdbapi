@@ -46,16 +46,22 @@ const PaginationButtons: React.FC<PaginationButtonsProps> = ({
   numberOfPages,
   disabled,
 }) => {
+
+  const handleClick = (newPage: number) => {
+    setCurrentPage(newPage);
+    window.scrollTo(0, 0);
+  }
+
   return (
     <PaginationContainer>
       <Button
-        onClick={() => setCurrentPage(currentPage - 1)}
+        onClick={() => handleClick(currentPage - 1)}
         disabled={disabled || currentPage === 1}
       >
         <FiArrowLeft size={20} /> Prev
       </Button>
       <Button
-        onClick={() => setCurrentPage(currentPage + 1)}
+        onClick={() => handleClick(currentPage + 1)}
         disabled={disabled || currentPage === numberOfPages}
       >
         Next <FiArrowRight size={20} />

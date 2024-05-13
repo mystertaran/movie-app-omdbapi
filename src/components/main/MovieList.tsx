@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import PaginationButtons from "./PaginationButtons";
 import Loader from "../addons/Loader";
 import useStore from "../../store";
+import useResize from "../../hooks/useResize";
 
 interface MovieContainerProps {
   isGrid: boolean;
@@ -170,12 +171,21 @@ const MovieList: React.FC<MovieListProps> = ({
   const isLoading = useStore((state) => state.isLoading);
   const currentPage = useStore((state) => state.currentPage);
   const setCurrentPage = useStore((state) => state.setCurrentPage);
-  const moviesPerPage = 8;
+  const moviesPerPage = useResize();
   const numberOfPages = Math.ceil(movies.length / moviesPerPage);
-  const moviesToShow = movies.slice(
+  const [moviesToShow, setMoviesToShow] = useState<Movie[]>([]);
+
+useEffect(() => {
+  setMoviesToShow(movies.slice(
     (currentPage - 1) * moviesPerPage,
     currentPage * moviesPerPage
-  );
+  ));
+}, [movies, currentPage, moviesPerPage])
+
+  // const moviesToShow = movies.slice(
+  //   (currentPage - 1) * moviesPerPage,
+  //   currentPage * moviesPerPage
+  // );
 
   const searchQuery = useStore((state) => state.searchQuery);
   const setSelectedMovie = useStore((state) => state.setSelectedMovie);

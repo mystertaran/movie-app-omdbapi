@@ -7,9 +7,12 @@ import MovieDetails from "./components/main/MovieDetails";
 import FilterBox from "./components/header/FilterBox";
 import GlobalStyle from "./styles/GlobalStyles";
 import useStore from "./store";
-import { fetchMovieDetails, fetchAllPages } from "./utils/api";
+import useMovieDetails from "./hooks/useMovieDetails";
+import useMovieSearch from "./hooks/useMovieSearch";
 
 const App: React.FC = () => {
+  const { isLoading } = useStore();
+
   const {
     searchQuery,
     setSearchQuery,
@@ -18,39 +21,14 @@ const App: React.FC = () => {
     searchType,
     setSearchType,
     movies,
-    setMovies,
+  } = useMovieSearch();
+  const {
     selectedMovie,
     setSelectedMovie,
     movieDetails,
-    setMovieDetails,
     isModalOpen,
     setIsModalOpen,
-    isLoading,
-    setIsLoading,
-  } = useStore();
-
-  useEffect(() => {
-    if (searchQuery || searchYear || searchType) {
-      setIsLoading(true);
-      fetchAllPages(searchQuery, searchYear, searchType).then((allMovies) => {
-        setMovies({ data: allMovies, query: searchQuery });
-        setIsLoading(false);
-      });
-    } else {
-      setMovies({ data: [], query: searchQuery });
-    }
-  }, [searchQuery, searchYear, searchType, setMovies, setIsLoading]);
-
-  useEffect(() => {
-    if (selectedMovie) {
-      setIsLoading(true);
-      fetchMovieDetails(selectedMovie.imdbID).then((data) => {
-        setMovieDetails(data);
-        setIsLoading(false);
-      });
-    }
-  }, [selectedMovie, setMovieDetails, setIsLoading]);
-
+  } = useMovieDetails();
 
   return (
     <>
@@ -84,6 +62,6 @@ const App: React.FC = () => {
       )}
     </>
   );
-}
+};
 
 export default App;

@@ -9,7 +9,6 @@ const keywords = [
   "superman",
 ];
 
-
 interface Movie {
   Poster: string;
   Title: string;
@@ -31,7 +30,7 @@ interface State {
   isModalOpen: boolean;
   isLoading: boolean;
   currentPage: number;
-  hasImageError: boolean;
+
   setCurrentPage: (page: number) => void;
   setSearchQuery: (query: string) => void;
   setSearchYear: (year: string) => void;
@@ -41,7 +40,6 @@ interface State {
   setMovieDetails: (details: Movie) => void;
   setIsModalOpen: (isOpen: boolean) => void;
   setIsLoading: (isLoading: boolean) => void;
-  setHasImageError: (hasError: boolean) => void;
 }
 
 const useStore = create<State>((set) => ({
@@ -64,7 +62,6 @@ const useStore = create<State>((set) => ({
   setMovieDetails: (details) => set({ movieDetails: details }),
   setIsModalOpen: (isOpen) => set({ isModalOpen: isOpen }),
   setIsLoading: (isLoading) => set({ isLoading }),
-  setHasImageError: (hasError) => set({ hasImageError: hasError }),
 }));
 
 export default useStore;

@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import PaginationButtons from "./PaginationButtons";
 import Loader from "../addons/Loader";
 import useStore from "../../store";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface MovieContainerProps {
   isGrid: boolean;
@@ -204,14 +205,23 @@ const MovieList: React.FC<MovieListProps> = ({
             Sorry, no results found. Please try another search.
           </NoResultsMessage>
         ) : (
-          moviesToShow.map((movie) => (
-            <Movie
-              key={movie.imdbID}
-              movie={movie}
-              setSelectedMovie={setSelectedMovie}
-              setIsModalOpen={setIsModalOpen}
-            />
-          ))
+          <AnimatePresence>
+            {moviesToShow.map((movie) => (
+              <motion.div
+                key={movie.imdbID}
+                initial={{ opacity: 0 , x: -50}}
+                animate={{ opacity: 1, x: 0}}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Movie
+                  movie={movie}
+                  setSelectedMovie={setSelectedMovie}
+                  setIsModalOpen={setIsModalOpen}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
         )}
       </MovieContainer>
       {!isLoading && (

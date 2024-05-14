@@ -16,9 +16,9 @@ const useResize = () => {
     let moviesPerPage;
 
     if (windowSize < 768) {
-        moviesPerPage = 6;
+        moviesPerPage = 8;
     } else if (windowSize < 1024) {
-        moviesPerPage = 9;
+        moviesPerPage = 12;
     } else {
         moviesPerPage = 12;
     }

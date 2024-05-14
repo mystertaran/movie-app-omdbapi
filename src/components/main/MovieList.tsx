@@ -22,8 +22,8 @@ const MovieContainer = styled.div<MovieContainerProps>`
           gap: 0px;
           padding: 0px;
 
-          @media (max-width: 768px) {
-            grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+          @media (max-width: 820px) {
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
           }
         `
       : css`
@@ -60,7 +60,7 @@ const MovieImage = styled.img`
   }
 
   @media (max-width: 768px) {
-    height: 70%;
+    height: 80%;
   }
 `;
 
@@ -143,16 +143,18 @@ const Movie: React.FC<MovieProps> = ({
         }}
       />
       {(movie.Poster === "N/A" || hasImageError) && (
-        <MovieTitle onClick={() => {
-          setSelectedMovie(movie);
-          setIsModalOpen(true);
-        }}>{movie.Title}</MovieTitle>
+        <MovieTitle
+          onClick={() => {
+            setSelectedMovie(movie);
+            setIsModalOpen(true);
+          }}
+        >
+          {movie.Title}
+        </MovieTitle>
       )}
     </MovieImageContainer>
   );
 };
-
-
 
 interface MovieListProps {
   searchQueryProp: string;
@@ -175,12 +177,14 @@ const MovieList: React.FC<MovieListProps> = ({
   const numberOfPages = Math.ceil(movies.length / moviesPerPage);
   const [moviesToShow, setMoviesToShow] = useState<Movie[]>([]);
 
-useEffect(() => {
-  setMoviesToShow(movies.slice(
-    (currentPage - 1) * moviesPerPage,
-    currentPage * moviesPerPage
-  ));
-}, [movies, currentPage, moviesPerPage])
+  useEffect(() => {
+    setMoviesToShow(
+      movies.slice(
+        (currentPage - 1) * moviesPerPage,
+        currentPage * moviesPerPage
+      )
+    );
+  }, [movies, currentPage, moviesPerPage]);
 
   // const moviesToShow = movies.slice(
   //   (currentPage - 1) * moviesPerPage,

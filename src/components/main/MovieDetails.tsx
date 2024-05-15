@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import useStore from "../../store";
+import Loader from "../addons/Loader";
 
 const MovieDetailsContainer = styled.div`
   display: flex;
@@ -75,57 +77,52 @@ const MovieDetailsButton = styled.a`
   }
 `;
 
-interface MovieDetailsProps {
-  movie: {
-    Poster: string;
-    Title: string;
-    imdbID: string;
-    Year: string;
-    Director?: string;
-    Language?: string;
-    Genre?: string;
-    Plot?: string;
-  };
-  onBack: () => void;
-}
+const MovieDetails: React.FC = () => {
+  const { isLoading, movieDetails } = useStore();
 
-const MovieDetails: React.FC<MovieDetailsProps> = ({ movie, onBack }) => {
+  if (isLoading) {
+    return <Loader centered />;
+  }
+
+  if (!movieDetails) {
+    return null;
+  }
+
   return (
-    (
-      <MovieDetailsContainer>
-        <ImageColumn>
-          <MovieImage
-            src={
-              movie.Poster !== "N/A"
-                ? movie.Poster
-                : process.env.PUBLIC_URL + "/No-Image-Placeholder.png"
-            }
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.onerror = null;
-              target.src = process.env.PUBLIC_URL + "/No-Image-Placeholder.png";
-            }}
-            alt={movie.Title}
-          />
-        </ImageColumn>
-        <ContentColumn>
-          <MovieTitle>{movie.Title}</MovieTitle>
-          <p>Production year: {movie.Year}</p>
-          <p>Director: {movie.Director}</p>
-          <p>Language: {movie.Language}</p>
-          <p>Genre: {movie.Genre}</p>
-          <p>Short plot:</p>
-          <p>{movie.Plot}</p>
-          <MovieDetailsButton
-            href={`https://www.imdb.com/title/${movie.imdbID}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            More details
-          </MovieDetailsButton>
-        </ContentColumn>
-      </MovieDetailsContainer>
-    )
+    
+    <MovieDetailsContainer>
+      <ImageColumn>
+        <MovieImage
+          src={
+            movieDetails.Poster !== "N/A"
+              ? movieDetails.Poster
+              : process.env.PUBLIC_URL + "/No-Image-Placeholder.png"
+          }
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.onerror = null;
+            target.src = process.env.PUBLIC_URL + "/No-Image-Placeholder.png";
+          }}
+          alt={movieDetails.Title}
+        />
+      </ImageColumn>
+      <ContentColumn>
+        <MovieTitle>{movieDetails.Title}</MovieTitle>
+        <p>Production year: {movieDetails.Year}</p>
+        <p>Director: {movieDetails.Director}</p>
+        <p>Language: {movieDetails.Language}</p>
+        <p>Genre: {movieDetails.Genre}</p>
+        <p>Short plot:</p>
+        <p>{movieDetails.Plot}</p>
+        <MovieDetailsButton
+          href={`https://www.imdb.com/title/${movieDetails.imdbID}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          More details
+        </MovieDetailsButton>
+      </ContentColumn>
+    </MovieDetailsContainer>
   );
 };
 

@@ -67,22 +67,17 @@ gap: 10px;
 };
 `;
 
-interface FilterBoxProps {
-  setSearchYear: (year: string) => void;
-  setSearchType: (type: string) => void;
-}
-
-const FilterBox: React.FC<FilterBoxProps> = () => {
+const FilterBox: React.FC = () => {
   const [year, setYear] = useState('');
   const [type, setType] = useState('');
 
-  const setSearchYear = useStore((state) => state.setSearchYear);
-  const setSearchType = useStore((state) => state.setSearchType);
-  const setCurrentPage = useStore((state) => state.setCurrentPage);
+
+  const { setSearchYear, setSearchType, setCurrentPage } = useStore();
 
   const handleSearch = () => {
     setSearchYear(year);
     setSearchType(type);
+    console.log(`Filtering by year: ${year}, type: ${type}`);
     setCurrentPage(1);
   };
 

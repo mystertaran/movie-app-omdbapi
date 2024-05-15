@@ -9,7 +9,7 @@ const keywords = [
   "superman",
 ];
 
-interface Movie {
+export interface Movie {
   Poster: string;
   Title: string;
   imdbID: string;
@@ -30,7 +30,8 @@ interface State {
   isModalOpen: boolean;
   isLoading: boolean;
   currentPage: number;
-
+  hasNextPage: boolean;
+  resetMovieDetails: () => void;
   setCurrentPage: (page: number) => void;
   setSearchQuery: (query: string) => void;
   setSearchYear: (year: string) => void;
@@ -40,6 +41,7 @@ interface State {
   setMovieDetails: (details: Movie) => void;
   setIsModalOpen: (isOpen: boolean) => void;
   setIsLoading: (isLoading: boolean) => void;
+  setHasNextPage: (hasNext: boolean) => void;
 }
 
 const useStore = create<State>((set) => ({
@@ -53,6 +55,7 @@ const useStore = create<State>((set) => ({
   isLoading: false,
   currentPage: 1,
   hasImageError: false,
+  hasNextPage: true,
   setCurrentPage: (page) => set({ currentPage: page }),
   setSearchQuery: (query) => set({ searchQuery: query }),
   setSearchYear: (year) => set({ searchYear: year }),
@@ -62,6 +65,8 @@ const useStore = create<State>((set) => ({
   setMovieDetails: (details) => set({ movieDetails: details }),
   setIsModalOpen: (isOpen) => set({ isModalOpen: isOpen }),
   setIsLoading: (isLoading) => set({ isLoading }),
+  setHasNextPage: (hasNext) => set({ hasNextPage: hasNext }),
+  resetMovieDetails: () => set({ movieDetails: null }),
 }));
 
 export default useStore;

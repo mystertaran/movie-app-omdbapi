@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import useStore from "../../store";
 
 const Button = styled.button`
   padding: 10px 20px;
@@ -9,7 +10,7 @@ const Button = styled.button`
   border-radius: 10px;
   border: none;
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
-  tranisition: transform 0.3s ease;
+  transition: transform 0.3s ease;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -43,26 +44,20 @@ interface PaginationButtonsProps {
 const PaginationButtons: React.FC<PaginationButtonsProps> = ({
   currentPage,
   setCurrentPage,
-  numberOfPages,
-  disabled,
 }) => {
-
-  const handleClick = (newPage: number) => {
-    setCurrentPage(newPage);
-    window.scrollTo(0, 0);
-  }
+  const hasNextPage = useStore((state) => state.hasNextPage); 
 
   return (
     <PaginationContainer>
       <Button
-        onClick={() => handleClick(currentPage - 1)}
-        disabled={disabled || currentPage === 1}
+        onClick={() => setCurrentPage(currentPage - 1)}
+        disabled={currentPage === 1}
       >
         <FiArrowLeft size={20} /> Prev
       </Button>
       <Button
-        onClick={() => handleClick(currentPage + 1)}
-        disabled={disabled || currentPage === numberOfPages}
+        onClick={() => setCurrentPage(currentPage + 1)}
+        disabled={!hasNextPage} 
       >
         Next <FiArrowRight size={20} />
       </Button>

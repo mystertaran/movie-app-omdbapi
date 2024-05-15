@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import useStore from "../store";
 import { fetchAllPages } from "../utils/api";
+import { fetchPageData } from "../utils/api";
 
 const useMovieSearch = () => {
   const {
@@ -12,22 +13,39 @@ const useMovieSearch = () => {
     setSearchType,
     movies,
     setMovies,
+    isLoading,
     setIsLoading,
+    currentPage,
+    setHasNextPage,
   } = useStore();
 
   useEffect(() => {
     if (searchQuery || searchYear || searchType) {
+      console.log(`Fetching movies with search query: ${searchQuery}, year: ${searchYear}, type: ${searchType}`)
       setIsLoading(true);
-      fetchAllPages(searchQuery, searchYear, searchType).then((allMovies) => {
-        setMovies({ data: allMovies, query: searchQuery });
-        setIsLoading(false);
-      });
-    } else {
-      setMovies({ data: [], query: searchQuery });
+      fetchPageData(searchQuery, currentPage, searchYear, searchType)
+        .then(({ movies, hasNextPage }) => {
+          console.log('Movies fetched:', movies);
+          setMovies({ data: movies, query: searchQuery });
+          setHasNextPage(hasNextPage);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching new page data: ", error);
+          setIsLoading(false);
+        });
     }
-  }, [searchQuery, searchYear, searchType, setMovies, setIsLoading]);
-
-  return { searchQuery, setSearchQuery, searchYear, setSearchYear, searchType, setSearchType, movies };
+  }, [searchQuery, searchYear, searchType, currentPage, setMovies, setHasNextPage, setIsLoading]);
+  return {
+    searchQuery,
+    setSearchQuery,
+    searchYear,
+    setSearchYear,
+    searchType,
+    setSearchType,
+    movies,
+    isLoading
+  };
 };
 
 export default useMovieSearch;

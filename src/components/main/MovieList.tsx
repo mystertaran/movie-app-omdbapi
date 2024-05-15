@@ -3,7 +3,8 @@ import styled, { css } from "styled-components";
 import PaginationButtons from "./PaginationButtons";
 import Loader from "../addons/Loader";
 import useStore from "../../store";
-import useResize from "../../hooks/useResize";
+import useMovieSearch from "../../hooks/useMovieSearch";
+import useMovieDetails from "../../hooks/useMovieDetails";
 
 interface MovieContainerProps {
   isGrid: boolean;
@@ -119,8 +120,6 @@ const Movie: React.FC<MovieProps> = ({
   setSelectedMovie,
   setIsModalOpen,
 }) => {
-  // const hasImageError = useStore((state) => state.hasImageError);
-  // const setHasImageError = useStore((state) => state.setHasImageError);
   const [hasImageError, setHasImageError] = useState(false);
 
   return (
@@ -156,52 +155,21 @@ const Movie: React.FC<MovieProps> = ({
   );
 };
 
-interface MovieListProps {
-  searchQueryProp: string;
-  moviesProp: Movie[];
-  setSelectedMovieProp: (movie: Movie) => void;
-  setIsModalOpenProp: (isOpen: boolean) => void;
-}
+const MovieList: React.FC = () => {
+  const { movies, isLoading } = useMovieSearch();
+  const { setSelectedMovie, setIsModalOpen } = useMovieDetails();
 
-const MovieList: React.FC<MovieListProps> = ({
-  searchQueryProp,
-  moviesProp,
-  setSelectedMovieProp,
-  setIsModalOpenProp,
-}) => {
-  const movies = useStore((state) => state.movies.data);
-  const isLoading = useStore((state) => state.isLoading);
-  const currentPage = useStore((state) => state.currentPage);
-  const setCurrentPage = useStore((state) => state.setCurrentPage);
-  const moviesPerPage = useResize();
-  const numberOfPages = Math.ceil(movies.length / moviesPerPage);
-  const [moviesToShow, setMoviesToShow] = useState<Movie[]>([]);
+  const {
+    currentPage,
+    setCurrentPage,
+  } = useStore();
 
-  useEffect(() => {
-    setMoviesToShow(
-      movies.slice(
-        (currentPage - 1) * moviesPerPage,
-        currentPage * moviesPerPage
-      )
-    );
-  }, [movies, currentPage, moviesPerPage]);
+  const numberOfPages = Math.ceil(movies.data.length / 10);
 
-  // const moviesToShow = movies.slice(
-  //   (currentPage - 1) * moviesPerPage,
-  //   currentPage * moviesPerPage
-  // );
-
-  const searchQuery = useStore((state) => state.searchQuery);
-  const setSelectedMovie = useStore((state) => state.setSelectedMovie);
-  const setIsModalOpen = useStore((state) => state.setIsModalOpen);
-  const [prevSearchQuery, setPrevSearchQuery] = useState(searchQuery);
-
-  useEffect(() => {
-    if (searchQuery !== prevSearchQuery) {
-      setCurrentPage(1);
-      setPrevSearchQuery(searchQuery);
-    }
-  }, [searchQuery, prevSearchQuery, setCurrentPage]);
+  const handleMovieClick = (movie: Movie) => {
+    setSelectedMovie(movie);
+    setIsModalOpen(true);
+  };
 
   return (
     <>
@@ -210,25 +178,49 @@ const MovieList: React.FC<MovieListProps> = ({
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           numberOfPages={numberOfPages}
-          disabled={moviesToShow.length === 0}
+          disabled={movies.data.length === 0}
         />
       )}
-      <MovieContainer isGrid={moviesToShow.length > 0}>
+      <MovieContainer isGrid={movies.data.length > 0}>
         {isLoading ? (
           <Loader centered color="white" />
-        ) : moviesToShow.length === 0 ? (
+        ) : movies.data.length === 0 ? (
           <NoResultsMessage>
             Sorry, no results found. Please try another search.
           </NoResultsMessage>
         ) : (
-          moviesToShow.map((movie) => (
-            <Movie
-              key={movie.imdbID}
-              movie={movie}
-              setSelectedMovie={setSelectedMovie}
-              setIsModalOpen={setIsModalOpen}
-            />
-          ))
+          movies.data.map((movie) => {
+            console.log("Rendering movie:", movie.Title);
+            return (
+              <MovieImageContainer key={movie.imdbID} poster={movie.Poster}>
+                <MovieImage
+                  src={
+                    movie.Poster !== "N/A"
+                      ? movie.Poster
+                      : process.env.PUBLIC_URL + "/No-Image-Placeholder.png"
+                  }
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.onerror = null;
+                    target.src =
+                      process.env.PUBLIC_URL + "/No-Image-Placeholder.png";
+                  }}
+                  onClick={() => {
+                    handleMovieClick(movie);
+                  }}
+                />
+                {(movie.Poster === "N/A" || !movie.Poster) && (
+                  <MovieTitle
+                    onClick={() => {
+                      handleMovieClick(movie);
+                    }}
+                  >
+                    {movie.Title}
+                  </MovieTitle>
+                )}
+              </MovieImageContainer>
+            );
+          })
         )}
       </MovieContainer>
       {!isLoading && (
@@ -236,7 +228,7 @@ const MovieList: React.FC<MovieListProps> = ({
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           numberOfPages={numberOfPages}
-          disabled={moviesToShow.length === 0}
+          disabled={movies.data.length === 0}
         />
       )}
     </>

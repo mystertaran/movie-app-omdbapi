@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import NavBar from "./components/header/NavBar";
 import MovieList from "./components/main/MovieList";
 import Modal from "./components/main/Modal";
@@ -7,58 +7,21 @@ import MovieDetails from "./components/main/MovieDetails";
 import FilterBox from "./components/header/FilterBox";
 import GlobalStyle from "./styles/GlobalStyles";
 import useStore from "./store";
-import useMovieDetails from "./hooks/useMovieDetails";
-import useMovieSearch from "./hooks/useMovieSearch";
 
 const App: React.FC = () => {
-  const { isLoading } = useStore();
-
-  const {
-    searchQuery,
-    setSearchQuery,
-    searchYear,
-    setSearchYear,
-    searchType,
-    setSearchType,
-    movies,
-  } = useMovieSearch();
-  const {
-    selectedMovie,
-    setSelectedMovie,
-    movieDetails,
-    isModalOpen,
-    setIsModalOpen,
-  } = useMovieDetails();
+  const { isLoading, isModalOpen, movieDetails } = useStore();
 
   return (
     <>
       <GlobalStyle />
-      <NavBar setSearchQuery={setSearchQuery} />
-      <FilterBox setSearchYear={setSearchYear} setSearchType={setSearchType} />
+      <NavBar />
+      <FilterBox />
       {isModalOpen ? (
-        <Modal
-          onClick={() => {
-            setIsModalOpen(false);
-          }}
-        >
-          {isLoading ? (
-            <Loader />
-          ) : (
-            movieDetails && (
-              <MovieDetails
-                movie={movieDetails}
-                onBack={() => setIsModalOpen(false)}
-              />
-            )
-          )}
+        <Modal onClick={() => useStore.setState({ isModalOpen: false })}>
+          {isLoading ? <Loader /> : movieDetails ? <MovieDetails /> : `No movie details found.`}
         </Modal>
       ) : (
-        <MovieList
-          searchQueryProp={searchQuery}
-          moviesProp={movies.data}
-          setSelectedMovieProp={setSelectedMovie}
-          setIsModalOpenProp={setIsModalOpen}
-        />
+        <MovieList />
       )}
     </>
   );

@@ -11,6 +11,7 @@ const useMovieDetails = () => {
       isModalOpen,
       setIsModalOpen,
       setIsLoading,
+      resetMovieDetails,
     } = useStore();
   
     useEffect(() => {
@@ -22,6 +23,12 @@ const useMovieDetails = () => {
         });
       }
     }, [selectedMovie, setMovieDetails, setIsLoading]);
+
+    useEffect(() => {
+      if (!isModalOpen) {
+        resetMovieDetails();
+      }
+    }, [isModalOpen, resetMovieDetails]);
   
     return { selectedMovie, setSelectedMovie, movieDetails, isModalOpen, setIsModalOpen };
   };

@@ -20,12 +20,12 @@ interface NavBarProps {
   setSearchQuery: (query: string) => void;
 }
 
-const NavBar: React.FC<NavBarProps> = ({setSearchQuery}) => {
+const NavBar: React.FC = () => {
   return (
     <NavBarContainer>
       <Logo />
       <AppName />
-      <SearchBox setSearchQuery={setSearchQuery}/>
+      <SearchBox />
     </NavBarContainer>
   );
 };

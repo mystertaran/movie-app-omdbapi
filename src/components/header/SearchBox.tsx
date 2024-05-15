@@ -3,16 +3,16 @@ import styled from "styled-components";
 import { FiSearch } from "react-icons/fi";
 import useStore from "../../store";
 
-interface SearchIconProps {
-  size: number;
-}
+// interface SearchIconProps {
+//   size: number;
+// }
 
-interface SearchInputProps {
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  onFocus: () => void;
-  onBlur: () => void;
-  placeholder: string;
-}
+// interface SearchInputProps {
+//   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+//   onFocus: () => void;
+//   onBlur: () => void;
+//   placeholder: string;
+// }
 
 interface SearchBoxProps {
   setSearchQuery: (query: string) => void;
@@ -22,14 +22,14 @@ const SearchBoxContainer = styled.div`
   position: relative;
 `;
 
-const SearchIcon = styled(FiSearch)<SearchIconProps>`
+const SearchIcon = styled(FiSearch)`
   position: absolute;
   top: 48%;
   left: 8px;
   transform: translateY(-50%);
 `;
 
-const SearchInput = styled.input<SearchInputProps>`
+const SearchInput = styled.input`
   padding-left: 40px;
   font-size: 16px;
   width: 200px;
@@ -49,11 +49,11 @@ type HandleInput = (event: ChangeEvent<HTMLInputElement>) => void;
 type HandleSubmit = (event: FormEvent<HTMLFormElement>) => void;
 
 
-const SearchBox: React.FC<SearchBoxProps> = () => {
+const SearchBox: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
-  const setSearchQuery = useStore((state) => state.setSearchQuery);
+  const {setSearchQuery, setSearchType, setSearchYear}= useStore();
 
   const handleInput: HandleInput = (event) => {
     // console.log('Input value:', event.target.value);
@@ -64,6 +64,8 @@ const SearchBox: React.FC<SearchBoxProps> = () => {
     event.preventDefault();
     // console.log('Setting search query:', inputValue);
     setSearchQuery(inputValue);
+    setSearchYear("");
+    setSearchType("");
   };
 
   return (

@@ -28,7 +28,6 @@ export const fetchPageData = async (
   searchType?: string
 ): Promise<{ movies: Movie[]; hasNextPage: boolean }> => {
   try {
-    console.log("Fetching movies...");
     const response = await axios.get(
       `https://www.omdbapi.com/?s=${searchQuery}&page=${page}${
         searchYear ? `&y=${searchYear}` : ""

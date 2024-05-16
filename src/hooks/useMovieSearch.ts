@@ -23,7 +23,6 @@ const useMovieSearch = () => {
       setIsLoading(true);
       fetchPageData(searchQuery, currentPage, searchYear, searchType)
         .then(({ movies, hasNextPage }) => {
-          console.log('Movies fetched:', movies);
           setMovies({ data: movies, query: searchQuery });
           setHasNextPage(hasNextPage);
           setIsLoading(false);

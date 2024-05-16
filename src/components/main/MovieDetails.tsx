@@ -83,11 +83,11 @@ const MovieDetails: React.FC = () => {
   const { movieDetails } = useMovieDetails();
 
   if (isLoading) {
-    return <Loader centered />;
+    return <Loader $centered />;
   }
 
   if (!movieDetails) {
-    return <Loader centered/>
+    return <Loader $centered/>
   }
 
   return (

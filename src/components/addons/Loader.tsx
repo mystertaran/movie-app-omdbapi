@@ -2,13 +2,13 @@ import React from "react";
 import styled, { keyframes, css } from "styled-components";
 
 interface LoaderContainerProps {
-  color?: string;
-  centered?: boolean;
+  $color?: string;
+  $centered?: boolean;
 }
 
 interface LoaderProps {
-  centered?: boolean;
-  color?: string;
+  $centered?: boolean;
+  $color?: string;
 }
 
 const rotate = keyframes`
@@ -29,12 +29,12 @@ const LoaderContainer = styled.div<LoaderContainerProps>`
     margin: 8px;
     border-radius: 50%;
     border: 6px solid #000;
-    border-color: ${(props) => props.color || "#000"} transparent
-      ${(props) => props.color || "#000"} transparent;
+    border-color: ${(props) => props.$color || "#000"} transparent
+      ${(props) => props.$color || "#000"} transparent;
     animation: ${rotate} 1.2s linear infinite;
   }
   ${(props) =>
-    props.centered &&
+    props.$centered &&
     css`
       position: absolute;
       top: 50%;
@@ -51,8 +51,8 @@ const LoaderContainer = styled.div<LoaderContainerProps>`
     `}
 `;
 
-const Loader: React.FC<LoaderProps> = ({ centered, color }) => (
-  <LoaderContainer centered={centered} color={color} />
+const Loader: React.FC<LoaderProps> = ({ $centered, $color }) => (
+  <LoaderContainer $centered={$centered} color={$color} />
 );
 
 export default Loader;

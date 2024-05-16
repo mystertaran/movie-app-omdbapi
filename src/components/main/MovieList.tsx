@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import PaginationButtons from "./PaginationButtons";
 import Loader from "../addons/Loader";
-import useStore from "../../store";
+import useStore, {Movie} from "../../store";
 import useMovieSearch from "../../hooks/useMovieSearch";
 import useMovieDetails from "../../hooks/useMovieDetails";
 
@@ -98,66 +98,56 @@ const MovieTitle = styled.h2`
     max-height: 150px;
   }
 `;
-interface Movie {
-  Poster: string;
-  Title: string;
-  imdbID: string;
-  Year: string;
-  Director?: string;
-  Language?: string;
-  Genre?: string;
-  Plot?: string;
-}
 
-interface MovieProps {
-  movie: Movie;
-  setSelectedMovie: (movie: Movie) => void;
-  setIsModalOpen: (isOpen: boolean) => void;
-}
+// interface MovieProps {
+//   movie: Movie;
+//   setSelectedMovie: (movie: Movie) => void;
+//   setIsModalOpen: (isOpen: boolean) => void;
+// }
 
-const Movie: React.FC<MovieProps> = ({
-  movie,
-  setSelectedMovie,
-  setIsModalOpen,
-}) => {
-  const [hasImageError, setHasImageError] = useState(false);
+// const Film: React.FC<MovieProps> = ({
+//   movie,
+//   setSelectedMovie,
+//   setIsModalOpen,
+// }) => {
+//   const [hasImageError, setHasImageError] = useState(false);
 
-  return (
-    <MovieImageContainer poster={movie.Poster}>
-      <MovieImage
-        src={
-          movie.Poster !== "N/A"
-            ? movie.Poster
-            : process.env.PUBLIC_URL + "/No-Image-Placeholder.png"
-        }
-        onError={(e) => {
-          const target = e.target as HTMLImageElement;
-          target.onerror = null;
-          target.src = process.env.PUBLIC_URL + "/No-Image-Placeholder.png";
-          setHasImageError(true);
-        }}
-        onClick={() => {
-          setSelectedMovie(movie);
-          setIsModalOpen(true);
-        }}
-      />
-      {(movie.Poster === "N/A" || hasImageError) && (
-        <MovieTitle
-          onClick={() => {
-            setSelectedMovie(movie);
-            setIsModalOpen(true);
-          }}
-        >
-          {movie.Title}
-        </MovieTitle>
-      )}
-    </MovieImageContainer>
-  );
-};
+//   return (
+//     <MovieImageContainer poster={movie.Poster}>
+//       <MovieImage
+//         src={
+//           movie.Poster !== "N/A"
+//             ? movie.Poster
+//             : process.env.PUBLIC_URL + "/No-Image-Placeholder.png"
+//         }
+//         onError={(e) => {
+//           const target = e.target as HTMLImageElement;
+//           target.onerror = null;
+//           target.src = process.env.PUBLIC_URL + "/No-Image-Placeholder.png";
+//           setHasImageError(true);
+//         }}
+//         onClick={() => {
+//           setSelectedMovie(movie);
+//           setIsModalOpen(true);
+//         }}
+//       />
+//       {(movie.Poster === "N/A" || hasImageError) && (
+//         <MovieTitle
+//           onClick={() => {
+//             setSelectedMovie(movie);
+//             setIsModalOpen(true);
+//           }}
+//         >
+//           {movie.Title}
+//         </MovieTitle>
+//       )}
+//     </MovieImageContainer>
+//   );
+// };
 
 const MovieList: React.FC = () => {
   const { movies, isLoading } = useMovieSearch();
-  const { setSelectedMovie, setIsModalOpen } = useMovieDetails();
+  const { handleMovieClick } = useMovieDetails();
 
   const {
     currentPage,
@@ -165,11 +155,6 @@ const MovieList: React.FC = () => {
   } = useStore();
 
   const numberOfPages = Math.ceil(movies.data.length / 10);
-
-  const handleMovieClick = (movie: Movie) => {
-    setSelectedMovie(movie);
-    setIsModalOpen(true);
-  };
 
   return (
     <>

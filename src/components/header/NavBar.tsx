@@ -16,9 +16,6 @@ const NavBarContainer = styled.div`
   }
 `;
 
-interface NavBarProps {
-  setSearchQuery: (query: string) => void;
-}
 
 const NavBar: React.FC = () => {
   return (

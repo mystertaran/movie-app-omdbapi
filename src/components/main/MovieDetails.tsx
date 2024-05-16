@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import useStore from "../../store";
 import Loader from "../addons/Loader";
+import useMovieDetails from "../../hooks/useMovieDetails";
 
 const MovieDetailsContainer = styled.div`
   display: flex;
@@ -78,19 +79,20 @@ const MovieDetailsButton = styled.a`
 `;
 
 const MovieDetails: React.FC = () => {
-  const { isLoading, movieDetails } = useStore();
+  const { isLoading } = useStore();
+  const { movieDetails } = useMovieDetails();
 
   if (isLoading) {
     return <Loader centered />;
   }
 
   if (!movieDetails) {
-    return null;
+    return <Loader centered/>
   }
 
   return (
     
-    <MovieDetailsContainer>
+    <MovieDetailsContainer key={movieDetails.imdbID}>
       <ImageColumn>
         <MovieImage
           src={

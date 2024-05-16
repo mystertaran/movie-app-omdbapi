@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import useStore from "../store";
-import { fetchAllPages } from "../utils/api";
 import { fetchPageData } from "../utils/api";
 
 const useMovieSearch = () => {
@@ -21,7 +20,6 @@ const useMovieSearch = () => {
 
   useEffect(() => {
     if (searchQuery || searchYear || searchType) {
-      console.log(`Fetching movies with search query: ${searchQuery}, year: ${searchYear}, type: ${searchType}`)
       setIsLoading(true);
       fetchPageData(searchQuery, currentPage, searchYear, searchType)
         .then(({ movies, hasNextPage }) => {

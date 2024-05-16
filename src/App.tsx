@@ -2,27 +2,27 @@ import React from "react";
 import NavBar from "./components/header/NavBar";
 import MovieList from "./components/main/MovieList";
 import Modal from "./components/main/Modal";
-import Loader from "./components/addons/Loader";
 import MovieDetails from "./components/main/MovieDetails";
 import FilterBox from "./components/header/FilterBox";
 import GlobalStyle from "./styles/GlobalStyles";
 import useStore from "./store";
+import useMovieDetails from "./hooks/useMovieDetails";
 
 const App: React.FC = () => {
-  const { isLoading, isModalOpen, movieDetails } = useStore();
+  const { isModalOpen } = useStore();
+  const { movieDetails } = useMovieDetails();
 
   return (
     <>
       <GlobalStyle />
       <NavBar />
       <FilterBox />
-      {isModalOpen ? (
+      {isModalOpen && (
         <Modal onClick={() => useStore.setState({ isModalOpen: false })}>
-          {isLoading ? <Loader /> : movieDetails ? <MovieDetails /> : `No movie details found.`}
+          {movieDetails ? <MovieDetails /> : null}
         </Modal>
-      ) : (
-        <MovieList />
       )}
+      <MovieList />
     </>
   );
 };

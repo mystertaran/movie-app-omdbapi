@@ -37,6 +37,7 @@ export const fetchPageData = async (
     );
     const movies = response.data.Search || [];
     const hasNextPage = movies.length === 10;
+    console.log("movies", movies);
     return { movies, hasNextPage };
   } catch (error) {
     console.error("Error fetching page data: ", error);

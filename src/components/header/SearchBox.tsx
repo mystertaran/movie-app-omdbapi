@@ -4,10 +4,6 @@ import { FiSearch } from "react-icons/fi";
 import useStore from "../../store";
 
 
-interface SearchBoxProps {
-  setSearchQuery: (query: string) => void;
-}
-
 const SearchBoxContainer = styled.div`
   position: relative;
 `;
@@ -43,7 +39,7 @@ const SearchBox: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
-  const {setSearchQuery, setSearchType, setSearchYear}= useStore();
+  const {setSearchQuery, setSearchType, setSearchYear, resetFilters}= useStore();
 
   const handleInput: HandleInput = (event) => {
     setInputValue(event.target.value);
@@ -53,7 +49,8 @@ const SearchBox: React.FC = () => {
     event.preventDefault();
     setSearchQuery(inputValue);
     setSearchYear("");
-    setSearchType("");
+    setSearchType("")
+    resetFilters();
   };
 
   return (

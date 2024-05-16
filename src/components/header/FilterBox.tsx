@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import  useStore  from '../../store';
 
@@ -68,16 +68,18 @@ gap: 10px;
 `;
 
 const FilterBox: React.FC = () => {
-  const [year, setYear] = useState('');
-  const [type, setType] = useState('');
+  const { searchYear, searchType, setSearchYear, setSearchType, setCurrentPage } = useStore();
+  const [localYear, setLocalYear] = useState(searchYear);
+  const [localType, setLocalType] = useState(searchType);
 
-
-  const { setSearchYear, setSearchType, setCurrentPage } = useStore();
+  useEffect(() => {
+    setLocalYear(searchYear);
+    setLocalType(searchType);
+  }, [searchYear, searchType]);
 
   const handleSearch = () => {
-    setSearchYear(year);
-    setSearchType(type);
-    console.log(`Filtering by year: ${year}, type: ${type}`);
+    setSearchYear(localYear);
+    setSearchType(localType);;
     setCurrentPage(1);
   };
 
@@ -88,12 +90,12 @@ const FilterBox: React.FC = () => {
       <FilterInput
         type="number"
         placeholder="Year..."
-        value={year}
-        onChange={(e) => setYear(e.target.value)}
+        value={localYear}
+        onChange={(e) => setLocalYear(e.target.value)}
       />
       <FilterSelect
-        value={type}
-        onChange={(e) => setType(e.target.value)}
+        value={localType}
+        onChange={(e) => setLocalType(e.target.value)}
       >
         <option value="">All</option>
         <option value="movie">Movies</option>
@@ -101,7 +103,7 @@ const FilterBox: React.FC = () => {
         <option value="episode">Episodes</option>
       </FilterSelect>
       <FilterButton onClick={handleSearch}>
-        Search
+        Apply
       </FilterButton>
       </FilterFieldsContainer>
     </FilterBoxContainer>

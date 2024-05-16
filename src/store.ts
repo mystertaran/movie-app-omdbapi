@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import  {create}  from "zustand";
 
 const keywords = [
   "star wars",
@@ -32,6 +32,7 @@ interface State {
   currentPage: number;
   hasNextPage: boolean;
   resetMovieDetails: () => void;
+  resetFilters: () => void;
   setCurrentPage: (page: number) => void;
   setSearchQuery: (query: string) => void;
   setSearchYear: (year: string) => void;
@@ -67,6 +68,7 @@ const useStore = create<State>((set) => ({
   setIsLoading: (isLoading) => set({ isLoading }),
   setHasNextPage: (hasNext) => set({ hasNextPage: hasNext }),
   resetMovieDetails: () => set({ movieDetails: null }),
+  resetFilters: () => set({ searchYear: '', searchType: '' }),
 }));
 
 export default useStore;
